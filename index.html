@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEMT Invoice</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- TOP TOOLBAR (hidden on print) -->
+  <div class="toolbar no-print">
+    <button class="btn-primary" onclick="window.print()">🖨 Print / Save as PDF</button>
+    <button class="btn-secondary" onclick="addLineItem()">+ Add Line Item</button>
+    <button class="btn-ghost" onclick="resetForm()">↺ New Invoice</button>
+  </div>
+
+  <!-- INVOICE SHEET -->
+  <div class="invoice" id="invoice">
+
+    <!-- ── ROW 1: Company + INVOICE title ── -->
+    <div class="row-header">
+      <div class="company-block">
+        <div
+          class="editable company-name"
+          contenteditable="true"
+          data-placeholder="[Your Company Name]"
+          spellcheck="false"
+        ></div>
+        <div
+          class="editable company-slogan"
+          contenteditable="true"
+          data-placeholder="[Your Company Slogan / Tagline]"
+          spellcheck="false"
+        ></div>
+        <div class="company-sub-fields">
+          <div class="editable company-sub" contenteditable="true" data-placeholder="[Street Address]" spellcheck="false"></div>
+          <div class="editable company-sub" contenteditable="true" data-placeholder="[City, ST  ZIP Code]" spellcheck="false"></div>
+          <div class="editable company-sub" contenteditable="true" data-placeholder="Phone (000.000.0000)  |  Fax (000.000.0000)" spellcheck="false"></div>
+        </div>
+      </div>
+      <div class="invoice-title-block">
+        <h1 class="invoice-title">INVOICE</h1>
+        <div class="inv-meta-table">
+          <div class="inv-meta-row">
+            <span class="inv-meta-label">INVOICE #</span>
+            <span class="editable inv-meta-val" contenteditable="true" data-placeholder="1001" spellcheck="false"></span>
+          </div>
+          <div class="inv-meta-row">
+            <span class="inv-meta-label">DATE</span>
+            <input type="date" class="inv-date-input" id="invDate" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ROW 2: Bill To + Patient Info ── -->
+    <div class="row-billto">
+      <div class="billto-col">
+        <div class="col-label">BILL TO:</div>
+        <div class="editable" contenteditable="true" data-placeholder="[Patient Name]" spellcheck="false"></div>
+        <div class="editable" contenteditable="true" data-placeholder="[Street Address]" spellcheck="false"></div>
+        <div class="editable" contenteditable="true" data-placeholder="[City, ST  ZIP Code]" spellcheck="false"></div>
+        <div class="editable" contenteditable="true" data-placeholder="[Phone]" spellcheck="false"></div>
+      </div>
+      <div class="tripinfo-col">
+        <div class="col-label">TRIP INFORMATION:</div>
+        <div class="tripinfo-grid">
+          <span class="ti-label">Date of Service</span>
+          <input type="date" class="ti-input" id="dateOfService" />
+          <span class="ti-label">Appointment Time</span>
+          <input type="time" class="ti-input" id="apptTime" />
+          <span class="ti-label">Pick-Up Time</span>
+          <input type="time" class="ti-input" id="pickupTime" />
+          <span class="ti-label">Pick-Up Address</span>
+          <div class="editable ti-editable" contenteditable="true" data-placeholder="[Pick-up location]" spellcheck="false"></div>
+          <span class="ti-label">Destination</span>
+          <div class="editable ti-editable" contenteditable="true" data-placeholder="[Drop-off / appointment address]" spellcheck="false"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── COMMENTS ── -->
+    <div class="row-comments">
+      <span class="comments-label">COMMENTS OR SPECIAL INSTRUCTIONS:</span>
+      <div class="editable comments-field" contenteditable="true" data-placeholder="Enter any notes here..." spellcheck="false"></div>
+    </div>
+
+    <!-- ── LINE ITEMS TABLE ── -->
+    <table class="line-table" id="lineTable">
+      <thead>
+        <tr>
+          <th class="th-desc">DESCRIPTION</th>
+          <th class="th-breakdown">BREAKDOWN / DETAILS</th>
+          <th class="th-unit">UNIT PRICE</th>
+          <th class="th-qty">QTY</th>
+          <th class="th-total">TOTAL</th>
+          <th class="th-del no-print"></th>
+        </tr>
+      </thead>
+      <tbody id="lineBody">
+        <!-- rows injected by JS -->
+      </tbody>
+      <tfoot>
+        <tr class="subtotal-row">
+          <td colspan="4" class="subtotal-label">SUBTOTAL</td>
+          <td class="subtotal-val" id="subtotalVal">$0.00</td>
+          <td class="no-print"></td>
+        </tr>
+        <tr class="tax-row">
+          <td colspan="4" class="subtotal-label">
+            TAX (
+            <input type="number" id="taxRate" value="0" min="0" max="100" step="0.1" class="tax-input" />%)
+          </td>
+          <td class="subtotal-val" id="taxVal">$0.00</td>
+          <td class="no-print"></td>
+        </tr>
+        <tr class="total-due-row">
+          <td colspan="4" class="total-due-label">TOTAL DUE</td>
+          <td class="total-due-val" id="totalDueVal">$0.00</td>
+          <td class="no-print"></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- ── PAYMENT METHOD ── -->
+    <div class="row-payment">
+      <div class="payment-label">PAYMENT METHOD:</div>
+      <div class="payment-options">
+        <label class="pay-opt"><input type="checkbox" id="payCash" /><span class="box-face"></span> Cash</label>
+        <label class="pay-opt"><input type="checkbox" id="payCheck" /><span class="box-face"></span> Check</label>
+        <label class="pay-opt"><input type="checkbox" id="payCard" /><span class="box-face"></span> Card</label>
+        <label class="pay-opt"><input type="checkbox" id="payInsurance" /><span class="box-face"></span> Insurance</label>
+      </div>
+      <div class="check-num-block">
+        <span class="ti-label">Check #:</span>
+        <div class="editable check-num-field" contenteditable="true" data-placeholder="—" spellcheck="false"></div>
+      </div>
+    </div>
+
+    <!-- ── FOOTER NOTE ── -->
+    <div class="row-footer-note">
+      <div class="editable footer-note" contenteditable="true"
+        data-placeholder="e.g. Make all checks payable to [Company Name]. If you have any questions contact [phone / email]."
+        spellcheck="false"></div>
+    </div>
+
+    <!-- ── THANK YOU ── -->
+    <div class="row-thankyou">
+      <div class="editable thankyou-text" contenteditable="true" data-placeholder="Thank you for your business!" spellcheck="false"></div>
+    </div>
+
+  </div><!-- /invoice -->
+</div><!-- /page-wrap -->
+
+<script src="app.js"></script>
+</body>
+</html>

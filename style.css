@@ -1,0 +1,585 @@
+/* ============================================
+   NEMT Invoice — style.css
+   Clean single-page invoice, fully editable
+   ============================================ */
+
+:root {
+  --black: #111;
+  --dark: #222;
+  --mid: #555;
+  --light: #888;
+  --border: #bbb;
+  --border-light: #ddd;
+  --bg-head: #2c2c2c;
+  --bg-subhead: #d0d0d0;
+  --bg-total: #f0f0f0;
+  --accent: #1a3a6e;
+  --white: #fff;
+  --cream: #fafaf8;
+  --gold: #b8962e;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; }
+
+body {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  background: #c8c8c8;
+  color: var(--dark);
+  min-height: 100vh;
+  padding: 20px 0 60px;
+}
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 20px;
+  margin-bottom: 18px;
+}
+
+.btn-primary, .btn-secondary, .btn-ghost {
+  padding: 9px 22px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.btn-primary  { background: var(--accent); color: #fff; }
+.btn-secondary { background: #3a7d44; color: #fff; }
+.btn-ghost { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.4); }
+
+.btn-primary:hover  { opacity: 0.88; }
+.btn-secondary:hover { opacity: 0.88; }
+.btn-ghost:hover { background: rgba(255,255,255,0.35); }
+
+/* ── PAGE WRAP ── */
+.page-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── INVOICE SHEET ── */
+.invoice {
+  background: var(--white);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.22);
+  padding: 36px 40px 30px;
+  border-radius: 2px;
+}
+
+/* ── EDITABLES ── */
+.editable {
+  outline: none;
+  min-height: 1.3em;
+  border-bottom: 1px dashed transparent;
+  transition: border-color 0.15s, background 0.15s;
+  padding: 2px 3px;
+  border-radius: 2px;
+  cursor: text;
+}
+.editable:hover  { border-bottom-color: #aaa; background: #f7f9ff; }
+.editable:focus  { border-bottom-color: var(--accent); background: #f0f4ff; outline: none; }
+.editable:empty::before {
+  content: attr(data-placeholder);
+  color: #bbb;
+  pointer-events: none;
+}
+
+/* ── ROW 1: Header ── */
+.row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.company-block { flex: 1; }
+
+.company-name {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 2px;
+}
+
+.company-slogan {
+  font-size: 0.82rem;
+  color: var(--mid);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.company-sub-fields { display: flex; flex-direction: column; gap: 1px; }
+.company-sub { font-size: 0.8rem; color: var(--mid); }
+
+/* Invoice title block */
+.invoice-title-block { text-align: right; flex-shrink: 0; min-width: 200px; }
+
+.invoice-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.inv-meta-table { display: flex; flex-direction: column; gap: 5px; }
+
+.inv-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  font-size: 0.82rem;
+}
+
+.inv-meta-label {
+  color: var(--mid);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.inv-meta-val {
+  font-weight: 600;
+  color: var(--black);
+  min-width: 80px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+
+.inv-date-input {
+  border: none;
+  border-bottom: 1px solid var(--border);
+  font-family: inherit;
+  font-size: 0.82rem;
+  color: var(--dark);
+  background: transparent;
+  padding: 2px 4px;
+  outline: none;
+  text-align: right;
+  cursor: pointer;
+}
+
+.inv-date-input:focus { border-bottom-color: var(--accent); background: #f0f4ff; }
+
+/* ── DIVIDER ── */
+.divider {
+  border: none;
+  border-top: 2px solid var(--accent);
+  margin: 0 0 16px;
+}
+
+/* ── ROW 2: Bill To + Trip Info ── */
+.row-billto {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  background: var(--cream);
+}
+
+.col-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--mid);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.billto-col .editable {
+  font-size: 0.88rem;
+  margin-bottom: 2px;
+  display: block;
+}
+
+/* Trip info */
+.tripinfo-col {}
+
+.tripinfo-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 12px;
+  align-items: center;
+}
+
+.ti-label {
+  font-size: 0.76rem;
+  color: var(--mid);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ti-input {
+  border: none;
+  border-bottom: 1px solid var(--border);
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--dark);
+  background: transparent;
+  padding: 2px 4px;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.ti-input:focus { border-bottom-color: var(--accent); background: #f0f4ff; }
+
+.ti-editable {
+  font-size: 0.85rem;
+  border-bottom: 1px dashed #ccc !important;
+}
+
+/* ── COMMENTS ── */
+.row-comments {
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  background: var(--cream);
+}
+
+.comments-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--mid);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.comments-field {
+  flex: 1;
+  font-size: 0.85rem;
+  min-height: 1.4em;
+}
+
+/* ── LINE ITEMS TABLE ── */
+.line-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0;
+}
+
+.line-table thead tr {
+  background: var(--bg-head);
+  color: #fff;
+}
+
+.line-table thead th {
+  padding: 9px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.th-desc      { width: 30%; }
+.th-breakdown { width: 30%; }
+.th-unit      { width: 13%; text-align: right !important; }
+.th-qty       { width: 8%;  text-align: center !important; }
+.th-total     { width: 13%; text-align: right !important; }
+.th-del       { width: 6%;  border: none !important; background: transparent !important; }
+
+/* Body rows */
+.line-table tbody tr {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.line-table tbody tr:nth-child(even) { background: #f9f9f9; }
+.line-table tbody tr:hover { background: #f0f4ff; }
+
+.line-table tbody td {
+  padding: 0;
+  vertical-align: middle;
+  border: 1px solid var(--border-light);
+}
+
+.line-table tbody td.td-del {
+  border: none;
+  background: transparent;
+  text-align: center;
+}
+
+/* Cell editables */
+.cell-edit {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  outline: none;
+  min-height: 36px;
+  font-size: 0.86rem;
+  font-family: inherit;
+  cursor: text;
+}
+
+.cell-edit:focus { background: #eef2ff; }
+.cell-edit:empty::before { content: attr(data-placeholder); color: #ccc; pointer-events: none; }
+
+.cell-num {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.cell-center { text-align: center; }
+
+input.cell-input {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.86rem;
+  color: var(--dark);
+  outline: none;
+  text-align: right;
+}
+
+input.cell-input:focus { background: #eef2ff; }
+input.cell-input.center { text-align: center; }
+
+.row-total {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 0.86rem;
+  text-align: right;
+  color: var(--dark);
+}
+
+/* Delete button */
+.btn-del-row {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  display: block;
+  margin: auto;
+}
+.btn-del-row:hover { color: #c0392b; background: #fdecea; }
+
+/* Tfoot */
+.line-table tfoot td {
+  padding: 7px 10px;
+  font-size: 0.82rem;
+  border-top: 1px solid var(--border);
+}
+
+.subtotal-label {
+  text-align: right;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--mid);
+  background: var(--bg-total);
+  border: 1px solid var(--border-light);
+}
+
+.subtotal-val {
+  text-align: right;
+  font-weight: 600;
+  color: var(--dark);
+  background: var(--bg-total);
+  border: 1px solid var(--border-light);
+}
+
+.tax-row .subtotal-label,
+.tax-row .subtotal-val {
+  background: #e8e8e8;
+}
+
+.tax-input {
+  width: 44px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  font-family: inherit;
+  font-size: 0.82rem;
+  text-align: center;
+  background: transparent;
+  outline: none;
+  padding: 0 2px;
+  color: var(--dark);
+}
+
+.total-due-row td {
+  background: var(--bg-head);
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.total-due-label {
+  text-align: right;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.total-due-val {
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+/* ── PAYMENT ── */
+.row-payment {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-top: none;
+  background: var(--cream);
+  flex-wrap: wrap;
+}
+
+.payment-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  white-space: nowrap;
+}
+
+.payment-options {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.pay-opt {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Hide real checkbox, show custom box */
+.pay-opt input[type="checkbox"] { display: none; }
+
+.box-face {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--mid);
+  border-radius: 2px;
+  background: #fff;
+  transition: background 0.1s, border-color 0.1s;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.pay-opt input[type="checkbox"]:checked + .box-face {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.pay-opt input[type="checkbox"]:checked + .box-face::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 1px;
+  width: 7px;
+  height: 4px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg);
+}
+
+.check-num-block {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 0.82rem;
+}
+
+.check-num-field {
+  min-width: 80px;
+  border-bottom: 1px dashed var(--border) !important;
+  font-size: 0.85rem;
+}
+
+/* ── FOOTER NOTE ── */
+.row-footer-note {
+  margin-top: 16px;
+  padding: 0 2px;
+}
+
+.footer-note {
+  font-size: 0.8rem;
+  color: var(--mid);
+  line-height: 1.6;
+}
+
+/* ── THANK YOU ── */
+.row-thankyou {
+  margin-top: 14px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 12px;
+  text-align: center;
+}
+
+.thankyou-text {
+  font-size: 0.88rem;
+  color: var(--mid);
+  font-style: italic;
+  text-align: center;
+}
+
+/* ── PRINT ── */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+
+  .no-print { display: none !important; }
+
+  .page-wrap { max-width: 100%; margin: 0; }
+
+  .invoice {
+    box-shadow: none;
+    padding: 20px 28px;
+  }
+
+  .editable {
+    border-bottom-color: transparent !important;
+    background: transparent !important;
+  }
+
+  .editable:empty::before { content: ''; }
+
+  .ti-input, .inv-date-input, .tax-input, .cell-input {
+    border-bottom-color: transparent !important;
+  }
+
+  .btn-del-row { display: none; }
+
+  .line-table tbody tr:hover { background: unset; }
+}
